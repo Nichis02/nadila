@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kartu Ucapan untuk Nadila + Game Seru</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      user-select: none;
+      position: relative;
+      height: 100vh;
+    }
+    .slide {
+      display: none;
+      padding: 40px;
+      text-align: center;
+      height: 100%;
+    }
+    .active {
+      display: block;
+    }
+    .gift-box {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      background-image: url('https://i.postimg.cc/QMyH8wh9/Screenshot-2025-06-22-203221.png');
+      background-size: cover;
+      background-position: center;
+      border: 5px dashed white;
+      border-radius: 20px;
+      cursor: pointer;
+      position: relative;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .gift-box.open::after {
+      content: '🎁';
+      font-size: 4rem;
+      position: absolute;
+      top: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .gift-content img {
+      max-width: 300px;
+      margin: 15px auto;
+      display: none;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      animation: popIn 0.7s ease forwards;
+    }
+    .gift-content img.show {
+      display: block;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .character {
+      position: absolute;
+      bottom: 20px;
+      left: -100px;
+      width: 80px;
+      animation: walkIn 3s ease forwards;
+      user-select: none;
+    }
+    @keyframes walkIn {
+      0% { left: -100px; opacity: 0; }
+      100% { left: 20px; opacity: 1; }
+    }
+    .dialog {
+      position: absolute;
+      bottom: 120px;
+      left: 110px;
+      background: #fff8dc;
+      padding: 10px 15px;
+      border-radius: 15px;
+      border: 2px solid #ffa07a;
+      max-width: 200px;
+      font-size: 0.9rem;
+      animation: fadeIn 2s ease forwards;
+      display: none;
+      user-select: none;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: #ffb3c6;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: #fceabb;
+      z-index: 9999;
+      animation: fall 4s linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    /* Game Koala */
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      margin-top: 20px;
+      border: 3px dashed #ff9ebc;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff0f5;
+      user-select: none;
+    }
+    #koala {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+    #score {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #d55a7a;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/23/audio_3f04c3c0fc.mp3?filename=happy-adventure-112193.mp3" type="audio/mp3">
+  </audio>
+  <audio id="openSound">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/08/audio_04f0dc62ff.mp3?filename=magic-fairy-click-112618.mp3" type="audio/mp3">
+  </audio>
+  <audio id="clickSound">
+    <source src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_7f26f8c645.mp3?filename=click-1926.mp3" type="audio/mp3">
+  </audio>
+
+  <div class="slide active" id="slide1">
+    <h1>Hai Nadila! 🎉</h1>
+    <p>Udah lama banget nggak ketemu yaa 😢</p>
+    <p>Semangat ngerjain skripsinya! Jangan cuma makan sekali sehari 😡</p>
+    <p>Inget, skripsi itu bukan horor — kamu lebih seram dari dosennya 😆</p>
+    <p>Dari: Dhani</p>
+    <button onclick="goToGift()">Klik untuk buka hadiah 🎁</button>
+  </div>
+
+  <div class="slide" id="slide2">
+    <div class="gift-box" id="giftBox"></div>
+    <div class="gift-content" id="giftGallery">
+      <img src="https://i.postimg.cc/8kwjK7rP/Screenshot-2025-06-22-201523.png" alt="Foto Nadila 1" />
+      <img src="https://i.postimg.cc/zXcwQtRB/Screenshot-2025-06-22-202518.png" alt="Foto Nadila 2" />
+      <img src="https://i.postimg.cc/SRK8TCSC/Screenshot-2025-06-22-202533.png" alt="Foto Nadila 3" />
+      <img src="https://i.postimg.cc/xdSmrWj0/Screenshot-2025-06-22-202542.png" alt="Foto Nadila 4" />
+    </div>
+    <img src="https://i.postimg.cc/bw0Jnd8h/Screenshot-2025-06-22-202445.png" alt="karakter koala" class="character" id="characterImg" />
+    <div class="dialog" id="characterDialog">Jangan lupa minum air putih dan tidur cukup yaa! 🐨✨</div>
+    
+    <div id="gameArea">
+      <img src="https://i.postimg.cc/bw0Jnd8h/Screenshot-2025-06-22-202445.png" alt="koala game" id="koala" />
+    </div>
+    <div id="score">Poin: 0</div>
+
+    <button id="btnBack">Kembali</button>
+  </div>
+
+  <script>
+    const slide1 = document.getElementById('slide1');
+    const slide2 = document.getElementById('slide2');
+    const giftBox = document.getElementById('giftBox');
+    const giftGallery = document.getElementById('giftGallery');
+    const btnBack = document.getElementById('btnBack');
+    const openSound = document.getElementById('openSound');
+    const characterDialog = document.getElementById('characterDialog');
+    const koala = document.getElementById('koala');
+    const gameArea = document.getElementById('gameArea');
+    const scoreDisplay = document.getElementById('score');
+    const clickSound = document.getElementById('clickSound');
+
+    let score = 0;
+    let gameActive = false;
+    let giftIndex = 0;
+
+    function goToGift() {
+      slide1.classList.remove('active');
+      slide2.classList.add('active');
+    }
+
+    giftBox.addEventListener('click', () => {
+      if (giftBox.classList.contains('open')) return;
+      giftBox.classList.add('open');
+      openSound.play();
+      characterDialog.style.display = 'block';
+      launchConfetti();
+      showGiftsSequentially();
+      startGame();
+    });
+
+    btnBack.onclick = () => {
+      slide2.classList.remove('active');
+      slide1.classList.add('active');
+      resetGame();
+      resetGifts();
+    };
+
+    // Tampilkan gambar hadiah satu-satu dengan delay 1.5 detik
+    function showGiftsSequentially() {
+      giftIndex = 0;
+      let imgs = giftGallery.children;
+      for(let img of imgs) img.classList.remove('show');
+      
+      function showNext() {
+        if(giftIndex < imgs.length){
+          imgs[giftIndex].classList.add('show');
+          giftIndex++;
+          setTimeout(showNext, 1500);
+        }
+      }
+      showNext();
+    }
+
+    // Confetti effect
+    function launchConfetti() {
+      for (let i = 0; i < 50; i++) {
+        let confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 70%)`;
+        confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+      }
+    }
+
+    // Game "Catch the Koala"
+    function startGame() {
+      score = 0;
+      scoreDisplay.textContent = 'Poin: ' + score;
+      gameActive = true;
+      moveKoala();
+    }
+
+    function resetGame() {
+      gameActive = false;
+      score = 0;
+      scoreDisplay.textContent = 'Poin: 0';
+      koala.style.display = 'none';
+    }
+
+    koala.addEventListener('click', () => {
+      if(!gameActive) return;
+      score++;
+      scoreDisplay.textContent = 'Poin: ' + score;
+      clickSound.play();
+      moveKoala();
+      // Efek klik kecil
+      koala.style.transform = 'scale(1.2)';
+      setTimeout(() => koala.style.transform = 'scale(1)', 150);
+    });
+
+    function moveKoala() {
+      if(!gameActive) return;
+      let maxX = gameArea.clientWidth - koala.clientWidth;
+      let maxY = gameArea.clientHeight - koala.clientHeight;
+      let newX = Math.random() * maxX;
+      let newY = Math.random() * maxY;
+      koala.style.left = newX + 'px';
+      koala.style.top = newY + 'px';
+      koala.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
